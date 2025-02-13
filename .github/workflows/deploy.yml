@@ -1,0 +1,62 @@
+name: Deploy
+
+on:
+  push:
+    branches: [ main ]
+    
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      # GCPの認証設定
+      - id: auth
+        name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        
+      - name: Configure Docker
+        run: gcloud auth configure-docker asia-northeast1-docker.pkg.dev
+        
+      # バックエンドのデプロイ
+      - name: Build & Push Backend Image
+        run: |
+          cd backend
+          docker build -t asia-northeast1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/bmtm/backend:${{ github.sha }} .
+          docker push asia-northeast1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/bmtm/backend:${{ github.sha }}
+          
+      # フロントエンドのデプロイ
+      - name: Build & Push Frontend Image
+        run: |
+          cd frontend
+          docker build -t asia-northeast1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/bmtm/frontend:${{ github.sha }} .
+          docker push asia-northeast1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/bmtm/frontend:${{ github.sha }}
+          
+      # Cloud Runへのデプロイ
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy bmtm-backend \
+            --image asia-northeast1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/bmtm/backend:${{ github.sha }} \
+            --region asia-northeast1 \
+            --platform managed
+            
+          gcloud run deploy bmtm-frontend \
+            --image asia-northeast1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/bmtm/frontend:${{ github.sha }} \
+            --region asia-northeast1 \
+            --platform managed
+            
+      # デプロイ結果の通知
+      - name: Notify deploy result
+        if: always()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: repo,message,commit,author,took
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

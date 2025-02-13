@@ -56,8 +56,9 @@ jobs:
         name: test-results
         path: target/surefire-reports/
         
-    - name: Upload coverage report
-      if: success()
+    - name: Upload coverage report    # カバレッジレポートのアップロード
+      if: success()    # 成功時のみ実行
       uses: actions/upload-artifact@v3
       with:
         name: coverage-report
+        path: target/jacoco-report/

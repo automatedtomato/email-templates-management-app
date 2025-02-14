@@ -1,0 +1,13 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop  # テスト時はテーブルを自動作成・削除
+    show-sql: true          # SQLログを表示
+    properties:
+      hibernate:
+        format_sql: true    # SQLを整形して表示
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  datasource:
+    # TestContainersが動的に設定するので、ここでは設定不要
+    driver-class-name: org.postgresql.Driver

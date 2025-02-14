@@ -1,4 +1,4 @@
-package com.automatedtomato.email_templates_management_app.config;
+package com.automatedtomato.bmtm.config;
 
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;

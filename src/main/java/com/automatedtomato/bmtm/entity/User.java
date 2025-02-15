@@ -9,11 +9,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import com.automatedtomato.bmtm.enums.UserStatus;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(

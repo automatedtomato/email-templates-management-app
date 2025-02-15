@@ -80,7 +80,7 @@ class UserRepositoryTest extends AbstractTestContainers {
     }
 
     @Test
-void shouldUpdateUserStatus() {
+    void shouldUpdateUserStatus() {
     // Arrange (準備)
     User user = User.builder()
         .email("test@example.com")

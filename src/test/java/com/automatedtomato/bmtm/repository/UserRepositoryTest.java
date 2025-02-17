@@ -63,20 +63,20 @@ class UserRepositoryTest extends AbstractTestContainers {
 
         User savedUser = userRepository.save(user);
 
-        Optional<User> foundUser = userRepository.findByEmail("test@example.com");
+        User foundUser = userRepository.findByEmail("test@example.com");
 
         // Assert (検証)
-        assertThat(foundUser).isPresent();
-        assertThat(foundUser.get().getEmail()).isEqualTo(savedUser.getEmail());
+        assertThat(foundUser).isNotNull();
+        assertThat(foundUser.getEmail()).isEqualTo(savedUser.getEmail());
     }
 
     @Test
     void shouldNotFindUserByNonExistentEmail() {
         // Act (実行)
-        Optional<User> foundUser = userRepository.findByEmail("nonexistent@example");
+        User foundUser = userRepository.findByEmail("nonexistent@example");
 
         // Assert (検証)
-        assertThat(foundUser).isEmpty();
+        assertThat(foundUser).isNull();
     }
 
     @Test

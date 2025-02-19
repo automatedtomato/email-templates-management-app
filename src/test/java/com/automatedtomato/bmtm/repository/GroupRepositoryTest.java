@@ -50,8 +50,6 @@ class GroupRepositoryTest extends AbstractTestContainers {
             .description("This is a test group")
             .status(GroupStatus.ACTIVE)
             .build());
-
-
     }
 
     @Test

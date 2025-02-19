@@ -48,6 +48,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<GroupUser> groupUsers = new ArrayList<>();
 
+    @OneToMany(mappedBy = "createdBy")
+    private List<Template> templates = new ArrayList<>();
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
